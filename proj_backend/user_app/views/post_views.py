@@ -2,7 +2,8 @@ from datetime import datetime
 from datetime import timedelta
 
 from django.shortcuts import render 
-from rest_framework.response import response
+from rest_framework.response import Response
+
 from rest_framework.decorators import api_view
 # from rest_framework.deuser_appators import api_view
 from django.http import HttpResponse
@@ -10,7 +11,8 @@ from django.http import HttpResponse
 from ..models.post import Post
 # from ..serializers import PostSerializer
 
-#  @api_view(["GET"]) 
+@api_view(["GET"]) 
+
 def getAllPost(seft, code = None): 
     # return response()
     # return HttpResponse("You are at the main page where display all posts.", )
