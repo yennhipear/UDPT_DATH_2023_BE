@@ -16,13 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import post_views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    # add app cho người dùng thường 
-    path("user-app/", include("user_app.urls")), 
-    # add rest framework 
-    path('api-auth/', include('rest_framework.urls'))
-    # api route for user app 
-    # path(app_settings.ROUTES_PREFIX, include("user_app.urls")),
+    # path("admin/", admin.site.urls),
+    # Lấy tất cả bài post
+    path("all-posts/", post_views.getAllPost, name='posts'),
+    path("post/<int:post_id>/", post_views.getDetailPost, name='detail'),
 ]

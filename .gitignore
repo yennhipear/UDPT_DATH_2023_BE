@@ -1,0 +1,19 @@
+# copy từ folder BE cũ của Khanh
+
+/.idea/
+/index/__pycache__/
+/proj_backend/proj_backend/__pycache__/
+/proj_backend/configs/__pycache__/
+/proj_backend/migrations/
+/proj_backend/helpers/__pycache__/
+/proj_backend/core/middlewares/__pycache__/
+/proj_backend/core/models/__pycache__/
+/proj_backend/core/paginations/__pycache__/
+/proj_backend/core/serializers/__pycache__/
+/proj_backend/core/views/__pycache__/
+proj_backend/core/Entities/__pycache__/
+proj_backend/entities/__pycache__/
+/autorun.bat
+/shell.bat
+/venv/
+venv/Lib/
