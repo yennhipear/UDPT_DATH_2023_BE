@@ -1,12 +1,12 @@
-from ..models import Post
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
+from ..models.post import Post
 
 # khai báo các hàm thao tác với dữ liệu 
 class PostSerializer(ModelSerializer):
-    postId = serializers.IntegerField(source="ID")
-    title = serializers.CharField(source="title")
-    content = serializers.CharField(source="content")
+    # postId = serializers.IntegerField(source="ID")
+    # title = serializers.CharField(source="title")
+    # content = serializers.CharField(source="content")
     
 
     class Meta:

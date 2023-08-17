@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework', #add rest framework
     "user_app.apps.UserAppConfig",  #add user_app
+    "corsheaders", #fix cors header
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,6 +50,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    #fix cors header
+    "corsheaders.middleware.CorsMiddleware", 
+    "django.middleware.common.CommonMiddleware"
+    # end 
 ]
 
 ROOT_URLCONF = "proj_backend.urls"
@@ -124,9 +129,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # add django rest framework 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

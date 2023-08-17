@@ -9,22 +9,26 @@ from rest_framework.decorators import api_view
 from django.http import HttpResponse
 
 from ..models.post import Post
-# from ..serializers import PostSerializer
+from ..serializers.post_serializer import PostSerializer
 
 @api_view(["GET"]) 
-
 def getAllPost(seft, code = None): 
     # return response()
     # return HttpResponse("You are at the main page where display all posts.", )
-    latest_post_list = Post.objects.order_by("ID")
-    output = ", ".join([q.Content for q in latest_post_list])
-    return HttpResponse(output)
+    latest_post_list = Post.objects.all()
+    serializer = PostSerializer(latest_post_list, many =True) #mean multiple object 
+    return Response(serializer.data)
     # try:
     #     queryset = post.objects.get(emp_code=code)
     #     serializer = PostSerializer(queryset)
     #     return serializer.data
     # except:
     #     return None
-
+    
+@api_view(["GET"]) 
 def getDetailPost(request, post_id):
-    return HttpResponse("You're looking at post %s." % post_id)
+    # return HttpResponse("You're looking at post %s." % post_id)
+    latest_post_list = Post.objects.get(ID = post_id)
+    serializer = PostSerializer(latest_post_list, many = False) #mean single object 
+    return Response(serializer.data)
+
