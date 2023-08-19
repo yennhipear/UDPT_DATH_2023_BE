@@ -28,18 +28,18 @@ class LargeResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 10000
 
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 5
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+# class StandardResultsSetPagination(PageNumberPagination):
+#     page_size = 5
+#     page_size_query_param = 'page_size'
+#     max_page_size = 1000
 
 class UserListView(APIView):
     pagination_class = PageNumberPagination
 
     def get(self, request):
 
-        if self.request.query_params.get('page_size') != "0": # nếu là 0 thì lấy mặc định trong setting là 10 
-            PageNumberPagination.page_size = self.request.query_params.get('page_size', 10)  # Lấy giá trị tham số truy vấn, mặc định là 10
+        if self.request.query_params.get('pageSize') != "0": # nếu là 0 thì lấy mặc định trong setting là 10 
+            PageNumberPagination.page_size = self.request.query_params.get('pageSize', 10)  # Lấy giá trị tham số truy vấn, mặc định là 10
         
         users = User.objects.all()
         page = self.pagination_class().paginate_queryset(users, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
