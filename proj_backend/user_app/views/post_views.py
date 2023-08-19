@@ -15,7 +15,12 @@ from ..serializers.post_serializer import PostSerializer
 def getAllPost(seft, code = None): 
     # return response()
     # return HttpResponse("You are at the main page where display all posts.", )
+    
     latest_post_list = Post.objects.all()
+
+    # latest_post_list = Post.objects.prefetch_related('TagID')
+    
+    # latest_post_list = Post.objects.select_related().all()
     serializer = PostSerializer(latest_post_list, many =True) #mean multiple object 
     return Response(serializer.data)
     # try:
@@ -24,7 +29,7 @@ def getAllPost(seft, code = None):
     #     return serializer.data
     # except:
     #     return None
-    
+
 @api_view(["GET"]) 
 def getDetailPost(request, post_id):
     # return HttpResponse("You're looking at post %s." % post_id)
