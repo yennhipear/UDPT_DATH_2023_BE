@@ -37,10 +37,3 @@ class TagListView(APIView):
         return Response(serializer.data)
             # return PageNumberPagination.get_paginated_response(PageNumberPagination, serializer.data)
 
-@api_view(["GET"])   
-def getTagByID(self, tagID = None): 
-    # tagID = self.request.query_params.get('tagID')
-    return HttpResponse( tagID)
-    tags = Tag.objects.get(ID= tagID)
-    serializer = TagSerializer(tags, many =True) #mean multiple object 
-    return Response(serializer.data)

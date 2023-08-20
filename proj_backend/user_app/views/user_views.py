@@ -15,9 +15,6 @@ from ..serializers.user_serializers import UserSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
-
-
-
 @api_view(["GET"]) 
 def getAllUser(seft, pageSize = 3, pageNo = 1): 
     userList = User.objects.all()
