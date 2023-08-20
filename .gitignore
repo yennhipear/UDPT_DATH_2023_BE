@@ -7,7 +7,7 @@
 /proj_backend/migrations/
 /proj_backend/helpers/__pycache__/
 /proj_backend/proj_backend/user_app/middlewares/__pycache__/
-proj_backend\user_app\models\
+proj_backend/user_app/models/
 /proj_backend/proj_backend/user_app/paginations/__pycache__/
 /proj_backend/proj_backend/user_app/serializers/__pycache__/
 /proj_backend/proj_backend/user_app/views/__pycache__/
