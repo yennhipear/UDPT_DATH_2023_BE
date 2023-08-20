@@ -22,14 +22,23 @@ from rest_framework import generics
 
 from .views import post_views
 from .views.user_views import UserListView
+from .views.post_views import *
+from .views.tag_views import TagListView, getTagByID
 
 urlpatterns = [
     # path("admin/", admin.site.urls),
     # Lấy tất cả bài post
-    path("all-posts/", post_views.getAllPost, name='posts'),
-    path("post/<int:post_id>/", post_views.getDetailPost, name='detail'),
+    path("posts/", post_views.PostListView.as_view(), name='posts'),
+    path("posts/<int:post_id>/", post_views.getDetailPost, name='detail'),
+    
+    # api for tag 
+    # get all : http://127.0.0.1:8000/user-app/tags/ 
+    # get by id : http://127.0.0.1:8000/user-app/tags/?tagID=3
+    path("tags/", TagListView.as_view(), name='tags'), 
+    
 
     # api for user 
     path('users/', UserListView.as_view(), name='user-list')  #example: http://127.0.0.1:8000/user-app/users/?page_size=4&page=2 , không có page_size lấy mặc định là 10 
+
 ]
 

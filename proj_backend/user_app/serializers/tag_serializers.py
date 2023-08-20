@@ -4,9 +4,6 @@ from ..models.tag import Tag
 
 # khai báo các hàm thao tác với dữ liệu 
 class TagSerializer(ModelSerializer):
-    TagId = serializers.IntegerField(source="ID")
-    Name = serializers.CharField(source="Name")
-    
 
     class Meta:
         model = Tag
