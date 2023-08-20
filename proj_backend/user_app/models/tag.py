@@ -2,13 +2,7 @@ from django.db import models
 # import jsonfield
 # khai báo đối tượng dữ liệu Tag 
 
-
-
-
-
-
-
-
+# kkk
 class Tag(models.Model):
     class Meta:
         db_table = 'Tag'
