@@ -2,6 +2,8 @@ from django.db import models
 # import jsonfield
 # khai báo đối tượng dữ liệu Tag 
 
+
+
 class Tag(models.Model):
     class Meta:
         db_table = 'Tag'
