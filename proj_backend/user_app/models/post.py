@@ -1,10 +1,11 @@
 from django.db import models
 from .tag import Tag
+from .comment import Comment
 # import jsonfield
 # khai báo đối tượng dữ liệu post 
 
 
-class Post(models.Model):
+class Post(models.Model): # sau mỗi field không có dấu phẩy  
     class Meta:
         db_table = 'Post'
 
@@ -12,15 +13,25 @@ class Post(models.Model):
     UserAccountID = models.IntegerField()
     Title = models.CharField(max_length=512)
     Content = models.TextField()
-    AnswerID = models.CharField(max_length=512)
+    # AnswerID = models.CharField(max_length=512)
     TagID = models.ManyToManyField(
         Tag,
-        related_name='Posts_title', 
+        related_name='Posts_Title', 
         through='Posts_Tags', 
         through_fields = ('Post', 'Tag')   
     ) # Many-to-Many relationship
-    CommentID = models.CharField(max_length=10000)
-    Reaction = models.IntegerField()
+    CommentID = models.ManyToManyField(
+        Comment,
+        related_name='Posts_Comment', 
+        through='Posts_Comments', 
+        through_fields = ('Post', 'Comment')   
+    )
+
+    totalAnswer = models.IntegerField()
+
+    Like = models.IntegerField()
+    # DisLike = models.IntegerField()
+    View = models.IntegerField()
     Status = models.IntegerField()
     
     CreatedDate = models.DateTimeField(auto_now_add=True)
@@ -41,5 +52,18 @@ class Posts_Tags(models.Model):
             models.UniqueConstraint(
                 fields=('Post', 'Tag'),
                 name='unique_Post_Tag'
+            )
+        ]
+
+class Posts_Comments(models.Model):
+    Post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    Comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'Posts_Comments'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('Post', 'Comment'),
+                name='unique_Post_Comment'
             )
         ]
