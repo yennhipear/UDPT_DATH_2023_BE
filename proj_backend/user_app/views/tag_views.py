@@ -25,13 +25,7 @@ class TagListView(ViewSet):
             tags = Tag.objects.all()
             serializer = TagSerializer(tags, many=True)
                 
-            data = {
-                'statusCode': 200,
-                'message': 'data connection ok',
-                'data': serializer.data
-            }
-
-            return Response(data)
+            return Response(serializer.data)
         except: 
             return Response({'statusCode': 404, 'message': 'data connection not ok'}, status.HTTP_200_OK)
 
@@ -41,12 +35,7 @@ class TagListView(ViewSet):
                 tagID = self.request.query_params.get('tagID')
                 tags = Tag.objects.get(ID= tagID)
                 serializer = TagSerializer(tags, many =False) #mean single object 
-                data = {
-                    'statusCode': 200,
-                    'message': 'data connection ok',
-                    'data': serializer.data
-                }
-                return Response(data)
+                return Response(serializer.data)
             else: return Response({'statusCode': 404, 'message': 'Invalid Tag ID'}, status.HTTP_200_OK)
         except: 
             return Response({'statusCode': 404, 'message': 'data connection not ok'}, status.HTTP_200_OK)
@@ -59,12 +48,6 @@ class TagListView(ViewSet):
             page = self.pagination_class().paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
             
             serializer = TagSerializer(page, many=True)
-            
-            data = {
-                'statusCode': 200,
-                'message': 'data connection ok',
-                'data': serializer.data
-            }
 
             return Response(serializer.data)
         except: 

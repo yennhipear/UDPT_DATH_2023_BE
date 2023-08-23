@@ -20,8 +20,7 @@ from rest_framework.routers import DefaultRouter
 
 from rest_framework import generics
 
-from .views import post_views
-from .views.user_views import UserListView
+from .views.user_views import *
 from .views.post_views import *
 from .views.tag_views import *
 from .views.comment_views import CommentListViewInOnePost
@@ -32,8 +31,10 @@ urlpatterns = [
     # api for post 
     # get all : http://127.0.0.1:8000/user-app/posts/
     # get by id : http://127.0.0.1:8000/user-app/posts/?postID=3
-    path("posts/", post_views.PostListView.as_view(), name='posts'),
-    path("posts/updateStatus", post_views.PostUpdateStatus, name='posts update'),
+    path("posts/all", PostListView.as_view({'get': 'getAllPost'})),
+    path("posts/byID", PostListView.as_view({'get': 'getPostByID'})),
+    path("posts/pagi", PostListView.as_view({'get': 'getPostPagination'})),
+    # path("posts/updateStatus", PostUpdateStatus({'post': 'PostUpdateStatus'})),
 
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
@@ -43,7 +44,7 @@ urlpatterns = [
     path("tags/pagi", TagListView.as_view({'get': 'getTagPagination'})), 
 
     path("tags/createListTags", TagInsert.as_view(), name='tags-insert'), 
-
+    
     
     # api for comment
     # get all : http://127.0.0.1:8000/user-app/comments/
@@ -51,6 +52,7 @@ urlpatterns = [
     path("comments/", CommentListViewInOnePost.as_view(), name='comments'), 
 
     # api for user 
-    path('users/', UserListView.as_view(), name='user-list')  #example: http://127.0.0.1:8000/user-app/users/?pageSize=4&page=2 , không có page_size lấy mặc định là 10 
+    path('users/all', UserListView.as_view({'get': 'getAllUser'})),  #example: http://127.0.0.1:8000/user-app/users/all , không có page_size lấy mặc định là 10 
+    path('users/pagi', UserListView.as_view({'get': 'getUserPagination'}))  #example: http://127.0.0.1:8000/user-app/users/pagi , không có page_size lấy mặc định là 10 
 
 ]

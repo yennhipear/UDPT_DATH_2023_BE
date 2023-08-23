@@ -12,26 +12,37 @@ from django.db import connection
 from ..models.post import Post
 from ..serializers.post_serializer import PostSerializer
 from rest_framework.views import APIView
+from rest_framework.viewsets import ViewSet
 
-class PostListView(APIView):
+class PostListView(ViewSet):
     pagination_class = PageNumberPagination
 
-    def get(self, request):
+    def getAllPost(self, request):
+
+        posts = Post.objects.prefetch_related('TagID')
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def getPostByID(self, request):
         if self.request.query_params.get('postID'):  #lấy 1 post
             posts = Post.objects.prefetch_related('TagID').get(ID = self.request.query_params.get('postID'))
             
             serializer = PostSerializer(posts, many=False)
-            
-        else:     
-            if self.request.query_params.get('pageSize') is not None: # nếu là 0 thì lấy mặc định trong setting là 10 
-                PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
-            
-            posts = Post.objects.prefetch_related('TagID')
-            page = self.pagination_class().paginate_queryset(posts, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
-            
-            serializer = PostSerializer(page, many=True)
+            return Response(serializer.data)
+        else: return Response({'statusCode': 404, 'message': 'Invalid Tag ID'}, status.HTTP_200_OK)
+        
+    def getPostPagination(self, request):
+             
+        # if self.request.query_params.get('pageSize') is not None: # nếu là 0 thì lấy mặc định trong setting là 10 
+        PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
+        
+        posts = Post.objects.prefetch_related('TagID')
+        page = self.pagination_class().paginate_queryset(posts, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
+        
+        serializer = PostSerializer(page, many=True)
         return Response(serializer.data)
-            # return PageNumberPagination.get_paginated_response(PageNumberPagination, serializer.data)
+        # return PageNumberPagination.get_paginated_response(PageNumberPagination, serializer.data)
+
     def post(self, request):
         b = Post(ID=10, Title="All the latest Beatles news.")
 
@@ -46,7 +57,8 @@ class PostListView(APIView):
 
         # serializer = PostSerializer(b, many=False)
         # return Response(11)
-
+    # def PostUpdateStatus(self, request):
+    #     return HttpResponse(1)
 
 
 # class PostUpdateStatus(APIView):
