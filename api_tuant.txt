@@ -1,0 +1,11 @@
+status bài viết: 0 chờ, 1 duyệt , -1 hủy 
+api nhận chuỗi nhiều postid, và 1 status để duyệt or hủy
+
+
+1 api trả tổng post, tag, user
+
+search fullname trong user 
+search title or content trong post
+dùng cho admin
+
+api cho nhập post id sau, khi call thì update view + 1

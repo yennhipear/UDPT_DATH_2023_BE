@@ -10,8 +10,7 @@ from ..models.tag import Tag
 class PostSerializer(ModelSerializer):  # sau mỗi field không có dấu phẩy  
     TagID = TagSerializer(many=True)
     CommentID = CommentSerializer(many=True)
-
-
+    
     class Meta:
         model = Post
         fields = '__all__'

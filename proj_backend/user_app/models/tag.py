@@ -6,7 +6,7 @@ class Tag(models.Model):
     class Meta:
         db_table = 'Tag'
 
-    ID = models.PositiveBigIntegerField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     # author_id = models.CharField( max_length = 20)
     Name = models.CharField(max_length=512)
     #Content = models.CharField(max_length=100000)

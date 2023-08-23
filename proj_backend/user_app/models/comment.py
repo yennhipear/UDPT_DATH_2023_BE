@@ -10,6 +10,7 @@ class Comment(models.Model):
     ID = models.PositiveBigIntegerField(primary_key=True)
     UserAccountID = models.IntegerField()
     Content = models.TextField()
+    
     Status = models.IntegerField()
     CreatedDate = models.DateTimeField(auto_now_add=True)
     LastModifiedDate = models.DateTimeField()

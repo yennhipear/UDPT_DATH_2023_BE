@@ -20,20 +20,44 @@ class TagListView(APIView):
     pagination_class = PageNumberPagination
 
     def get(self, request):
-        if self.request.query_params.get('tagID'): 
-            tagID = self.request.query_params.get('tagID')
-            tags = Tag.objects.get(ID= tagID)
-            serializer = TagSerializer(tags, many =False) #mean single object 
-            # return Response(serializer.data)
-        else: 
-            if self.request.query_params.get('pageSize') != "0": # nếu là 0 thì lấy mặc định trong setting là 10 
-                PageNumberPagination.page_size = self.request.query_params.get('pageSize', 10)  # Lấy giá trị tham số truy vấn, mặc định là 10
-            
-            tags = Tag.objects.all()
-            page = self.pagination_class().paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
-            
-            serializer = TagSerializer(page, many=True)
-            
-        return Response(serializer.data)
-            # return PageNumberPagination.get_paginated_response(PageNumberPagination, serializer.data)
+        try:
+            if self.request.query_params.get('tagID'): 
+                tagID = self.request.query_params.get('tagID')
+                tags = Tag.objects.get(ID= tagID)
+                serializer = TagSerializer(tags, many =False) #mean single object 
+                # return Response(serializer.data)
+            else: 
+                if self.request.query_params.get('pageSize') != "0": # nếu là 0 thì lấy mặc định trong setting là 10 
+                    PageNumberPagination.page_size = self.request.query_params.get('pageSize', 10)  # Lấy giá trị tham số truy vấn, mặc định là 10
+                
+                tags = Tag.objects.all()
+                page = self.pagination_class().paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
+                
+                serializer = TagSerializer(page, many=True)
+                
+                data = {
+                    'statusCode': 200,
+                    'message': 'data connection ok',
+                    'Data': serializer.data
+                }
 
+            return Response(data)
+        except: 
+            return Response({'statusCode': 404, 'message': 'data connection not ok'}, status.HTTP_200_OK)
+    def post(self, request):
+        # b = Tag(id=10, Title="All the latest Beatles news.")
+        serializer = TagSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TagInsert(APIView):
+    def post(self, request):
+        # b = Tag(id=10, Title="All the latest Beatles news.")
+        serializer = TagSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

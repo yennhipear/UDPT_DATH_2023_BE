@@ -23,7 +23,7 @@ from rest_framework import generics
 from .views import post_views
 from .views.user_views import UserListView
 from .views.post_views import *
-from .views.tag_views import TagListView
+from .views.tag_views import TagListView, TagInsert
 from .views.comment_views import CommentListViewInOnePost
 
 
@@ -33,13 +33,16 @@ urlpatterns = [
     # get all : http://127.0.0.1:8000/user-app/posts/
     # get by id : http://127.0.0.1:8000/user-app/posts/?postID=3
     path("posts/", post_views.PostListView.as_view(), name='posts'),
-    
+    path("posts/updateStatus", post_views.PostUpdateStatus, name='posts update'),
+
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
     # get by id : http://127.0.0.1:8000/user-app/tags/?tagID=3
     path("tags/", TagListView.as_view(), name='tags'), 
+    path("tags/create", TagInsert.as_view(), name='tags-insert'), 
+
     
-    # api for comment  git commit -m "get all cmt and get all cmt in 1 post"
+    # api for comment
     # get all : http://127.0.0.1:8000/user-app/comments/
     # get by post id : http://127.0.0.1:8000/user-app/comments/?postID=2&pageSize=1&page=2
     path("comments/", CommentListViewInOnePost.as_view(), name='comments'), 
