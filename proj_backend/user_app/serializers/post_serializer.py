@@ -9,7 +9,7 @@ from ..models.tag import Tag
 # khai báo các hàm thao tác với dữ liệu 
 class PostSerializer(ModelSerializer):  # sau mỗi field không có dấu phẩy  
     TagID = TagSerializer(many=True)
-    CommentID = CommentSerializer(many=True)
+    CommentID = CommentSerializer(many=True, read_only=True)
     
     class Meta:
         model = Post

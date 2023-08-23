@@ -9,7 +9,7 @@ class Post(models.Model): # sau mỗi field không có dấu phẩy
     class Meta:
         db_table = 'Post'
 
-    ID = models.PositiveBigIntegerField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     UserAccountID = models.IntegerField()
     Title = models.CharField(max_length=512)
     Content = models.TextField()
@@ -18,13 +18,13 @@ class Post(models.Model): # sau mỗi field không có dấu phẩy
         Tag,
         related_name='Posts_Title', 
         through='Posts_Tags', 
-        through_fields = ('Post', 'Tag')   
+        through_fields = ('Post', 'Tag')
     ) # Many-to-Many relationship
     CommentID = models.ManyToManyField(
         Comment,
         related_name='Posts_Comment', 
         through='Posts_Comments', 
-        through_fields = ('Post', 'Comment')   
+        through_fields = ('Post', 'Comment')
     )
 
     totalAnswer = models.IntegerField()

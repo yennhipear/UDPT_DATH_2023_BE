@@ -130,7 +130,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # add django rest framework 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 1000000
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

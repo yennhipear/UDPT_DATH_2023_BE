@@ -7,7 +7,13 @@ from ..models.tag import Tag
 
 # khai báo các hàm thao tác với dữ liệu 
 class CommentSerializer(ModelSerializer):
-    # ChildComment = serializers.SerializerMethodField(
+ 
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
+   # ChildComment = serializers.SerializerMethodField(
     #     read_only=True, method_name="get_child_comments")
     
     # def get_child_comments(self, obj):
@@ -18,6 +24,3 @@ class CommentSerializer(ModelSerializer):
     #         many=True
     #     )
     #     return (serializer.data)
-    class Meta:
-        model = Comment
-        fields = '__all__'
