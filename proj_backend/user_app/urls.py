@@ -23,7 +23,7 @@ from rest_framework import generics
 from .views import post_views
 from .views.user_views import UserListView
 from .views.post_views import *
-from .views.tag_views import TagListView, TagInsert
+from .views.tag_views import *
 from .views.comment_views import CommentListViewInOnePost
 
 
@@ -38,8 +38,11 @@ urlpatterns = [
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
     # get by id : http://127.0.0.1:8000/user-app/tags/?tagID=3
-    path("tags/", TagListView.as_view(), name='tags'), 
-    path("tags/create", TagInsert.as_view(), name='tags-insert'), 
+    path("tags/all", TagListView.as_view({'get': 'getAllTag'})),
+    path("tags/byID", TagListView.as_view({'get': 'getTagByID'})), 
+    path("tags/pagi", TagListView.as_view({'get': 'getTagPagination'})), 
+
+    path("tags/createListTags", TagInsert.as_view(), name='tags-insert'), 
 
     
     # api for comment
