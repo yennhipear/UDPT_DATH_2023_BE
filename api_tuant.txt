@@ -4,7 +4,7 @@ api nhận chuỗi nhiều postid, và 1 status để duyệt or hủy
 
 1 api trả tổng post, tag, user
 
-search fullname trong user 
+search  DisplayName trong user 
 search title or content trong post
 dùng cho admin
 

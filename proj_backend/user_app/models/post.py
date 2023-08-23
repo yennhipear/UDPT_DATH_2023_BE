@@ -1,6 +1,7 @@
 from django.db import models
 from .tag import Tag
 from .comment import Comment
+from .user import User
 # import jsonfield
 # khai báo đối tượng dữ liệu post 
 
@@ -10,7 +11,7 @@ class Post(models.Model): # sau mỗi field không có dấu phẩy
         db_table = 'Post'
 
     ID = models.AutoField(primary_key=True)
-    UserAccountID = models.IntegerField()
+    UserAccountID = models.ForeignKey(User, on_delete=models.CASCADE, db_column = 'UserAccountID')
     Title = models.CharField(max_length=512)
     Content = models.TextField()
     # AnswerID = models.CharField(max_length=512)

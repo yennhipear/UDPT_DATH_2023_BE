@@ -15,6 +15,7 @@ from ..models.tag import Tag
 from ..serializers.tag_serializers import TagSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
+from .post_views import CustomPagination
 
 
 class TagListView(ViewSet):
@@ -44,12 +45,19 @@ class TagListView(ViewSet):
             # if  self.request.query_params.get('pageSize') is not None: # nếu là 0 thì lấy mặc định trong setting 
                 # return HttpResponse(self.request.query_params.get('pageSize'))
             PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
+            paginator = CustomPagination()
             tags = Tag.objects.all()
-            page = self.pagination_class().paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
+            page = paginator.paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
             
             serializer = TagSerializer(page, many=True)
 
-            return Response(serializer.data)
+            data = {
+                    'totalPage': paginator.page.paginator.num_pages,
+                    'currentPage': paginator.page.number,
+                    'data': serializer.data
+                }
+
+            return Response(data)
         except: 
             return Response({'statusCode': 404, 'message': 'data connection not ok'}, status.HTTP_200_OK)
 

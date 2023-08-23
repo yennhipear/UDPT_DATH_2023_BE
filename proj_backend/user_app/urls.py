@@ -34,7 +34,11 @@ urlpatterns = [
     path("posts/all", PostListView.as_view({'get': 'getAllPost'})),
     path("posts/byID", PostListView.as_view({'get': 'getPostByID'})),
     path("posts/pagi", PostListView.as_view({'get': 'getPostPagination'})),
-    # path("posts/updateStatus", PostUpdateStatus({'post': 'PostUpdateStatus'})),
+    path("posts/updateStatus", PostListView.as_view({'post': 'PostUpdateStatus'})), #update status in many post: http://127.0.0.1:8000/user-app/posts/updateStatus?postIDs=1,2,3&status=1 - status = 1 là duyệt, -1 là cancel, 0 là đang chờ duyệt 
+    path("posts/insertPost", PostListView.as_view({'post': 'post'})),  
+    path("posts/updatedataapi", update_data_api , name='update-data-api'),   
+
+
 
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
@@ -43,7 +47,7 @@ urlpatterns = [
     path("tags/byID", TagListView.as_view({'get': 'getTagByID'})), 
     path("tags/pagi", TagListView.as_view({'get': 'getTagPagination'})), 
 
-    path("tags/createListTags", TagInsert.as_view(), name='tags-insert'), 
+    path("tags/createListTags", TagInsert.as_view(), name='tags-insert'),
     
     
     # api for comment
