@@ -48,7 +48,7 @@ urlpatterns = [
     path("tags/byID", TagListView.as_view({'get': 'getTagByID'})), 
     path("tags/pagi", TagListView.as_view({'get': 'getTagPagination'})), 
 
-    path("tags/createListTags", TagInsert.as_view(), name='tags-insert'),
+    path("tags/createTags", TagListView.as_view({'get': 'post'})), # http://127.0.0.1:8000/user-app/tags/createTags?Names=p,ja,na
     
     
     # api for comment

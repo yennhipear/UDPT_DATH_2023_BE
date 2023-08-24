@@ -10,6 +10,7 @@ from rest_framework import generics
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
+from django.db import connection
 
 from ..models.tag import Tag
 from ..serializers.tag_serializers import TagSerializer
@@ -75,19 +76,15 @@ class TagListView(ViewSet):
 
     def post(self, request):
         # b = Tag(id=10, Title="All the latest Beatles news.")
-        serializer = TagSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        names = self.request.query_params.get('Names')
+        commaChar = ','
+        with connection.cursor() as cursor:
+            # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+            cursor.execute('insert into  "Tag" ("Name", "Status") select list.name, 1 from (SELECT unnest(string_to_array(%s, %s)) as name) List left join "Tag" b on list.name = b."Name" where b."ID" IS NULL ' , (names, commaChar))
+            
+        tags = Tag.objects.raw('SELECT b.* from (SELECT unnest(string_to_array(%s, %s)) as name) List left join "Tag" b on list.name = b."Name" ', (names, commaChar))
+        serializer = TagSerializer(tags, many =True)
 
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class TagInsert(APIView):
-    def post(self, request):
-        # b = Tag(id=10, Title="All the latest Beatles news.")
-        return Response(1)
-        serializer = TagSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
