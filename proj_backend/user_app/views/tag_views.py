@@ -23,7 +23,12 @@ class TagListView(ViewSet):
 
     def getAllTag(self, request):
         try:
-            tags = Tag.objects.all()
+            status = self.request.query_params.get('Status') 
+            if status is not None:
+                tags = Tag.objects.filter(Status = status) # xài filter thay cho get(), get chỉ lấy được 1 object thôi
+            else:
+                tags = Tag.objects.all() 
+            
             serializer = TagSerializer(tags, many=True)
                 
             return Response(serializer.data)
@@ -46,7 +51,13 @@ class TagListView(ViewSet):
                 # return HttpResponse(self.request.query_params.get('pageSize'))
             PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
             paginator = CustomPagination()
-            tags = Tag.objects.all()
+
+            status = self.request.query_params.get('Status') 
+            if status is not None:
+                tags = Tag.objects.filter(Status = status) # xài filter thay cho get(), get chỉ lấy được 1 object thôi
+            else:
+                tags = Tag.objects.all() 
+
             page = paginator.paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
             
             serializer = TagSerializer(page, many=True)

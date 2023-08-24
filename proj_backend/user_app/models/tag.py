@@ -9,6 +9,8 @@ class Tag(models.Model):
     ID = models.AutoField(primary_key=True)
     # author_id = models.CharField( max_length = 20)
     Name = models.CharField(max_length=512)
+    Status = models.IntegerField()
+
     #Content = models.CharField(max_length=100000)
     
 
