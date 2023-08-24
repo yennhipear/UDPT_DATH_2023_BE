@@ -73,6 +73,24 @@ class TagListView(ViewSet):
         except: 
             return Response({'statusCode': 404, 'message': 'data connection not ok'}, status.HTTP_200_OK)
 
+    def searchByName(self, request):
+        # if self.request.query_params.get('pageSize') is not None: # nếu là 0 thì lấy mặc định trong setting là 10 
+        PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
+        
+        paginator = CustomPagination()
+        keyWord = self.request.query_params.get('keyWord') 
+        tags = Tag.objects.filter(Name__icontains = keyWord).order_by("Name")
+        
+        page = paginator.paginate_queryset(tags, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
+    
+        serializer = TagSerializer(page, many=True)
+
+        data = {
+                    'totalPage': paginator.page.paginator.num_pages,
+                    'currentPage': paginator.page.number,
+                    'data': serializer.data
+                }
+        return Response(data)
 
     def post(self, request):
         # b = Tag(id=10, Title="All the latest Beatles news.")
@@ -87,4 +105,5 @@ class TagListView(ViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 

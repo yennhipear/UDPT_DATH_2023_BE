@@ -81,7 +81,7 @@ class PostListView(ViewSet):
         paginator = CustomPagination()
         
         keyWord = self.request.query_params.get('keyWord')
-        posts = Post.objects.prefetch_related('TagID').filter( Q(Title__icontains = keyWord) | Q(Content__icontains = keyWord))
+        posts = Post.objects.prefetch_related('TagID').filter( Q(Title__icontains = keyWord) | Q(Content__icontains = keyWord)).order_by("-CreatedDate") # dấu trừ là giảm dần, không có dấu trừ là tăng dần
         
         page = paginator.paginate_queryset(posts, request, view=self)
         serializer = PostSerializer(page, many=True)
@@ -107,7 +107,7 @@ class PostListView(ViewSet):
             postID = serializer.data['ID']
             print(postID)
             with connection.cursor() as cursor:
-                cursor.execute('UPDATE "Post" SET "UserAccountID" = %s where "ID" = %s' , (author, postID))
+                cursor.execute('UPDATE "Post" SET "UserAccountID" = %s, "LastModifiedBy" = %s  where "ID" = %s' , (author, author, postID))
             
             newPost = Post.objects.prefetch_related('TagID').get(ID = postID)
             serializer2 = PostSerializer(newPost, many=False)

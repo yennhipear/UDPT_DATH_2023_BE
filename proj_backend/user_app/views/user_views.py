@@ -76,7 +76,7 @@ class UserListView(ViewSet):
         
         paginator = CustomPagination()
         keyWord = self.request.query_params.get('keyWord') 
-        users = User.objects.filter(DisplayName__icontains = keyWord)
+        users = User.objects.filter(DisplayName__icontains = keyWord).order_by("-CreatedDate")
         
         page = paginator.paginate_queryset(users, request, view=self)  # Thực hiện phân trang với số lượng phần tử trên mỗi trang được truyền vào
     
