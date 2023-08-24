@@ -13,7 +13,7 @@ class Comment(models.Model):
     
     Status = models.IntegerField()
     CreatedDate = models.DateTimeField(auto_now_add=True)
-    LastModifiedDate = models.DateTimeField()
+    LastModifiedDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.Content

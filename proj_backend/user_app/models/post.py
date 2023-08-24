@@ -36,7 +36,7 @@ class Post(models.Model): # sau mỗi field không có dấu phẩy
     Status = models.IntegerField()
     
     CreatedDate = models.DateTimeField(auto_now_add=True)
-    LastModifiedDate = models.DateTimeField()
+    LastModifiedDate = models.DateTimeField(auto_now_add=True)
     LastModifiedBy = models.IntegerField()
     
 

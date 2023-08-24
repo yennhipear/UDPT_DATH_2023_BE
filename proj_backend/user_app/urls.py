@@ -34,12 +34,14 @@ urlpatterns = [
     path("posts/all", PostListView.as_view({'get': 'getAllPost'})),  
     path("posts/byID", PostListView.as_view({'get': 'getPostByID'})),
     path("posts/pagi", PostListView.as_view({'get': 'getPostPagination'})),
-    path("posts/searchByTitleContent", PostListView.as_view({'get': 'getPostByTitleContent'})),  # http://127.0.0.1:8000/user-app/posts/searchByTitleContent?keyWord=sau%20khi
+    path("posts/searchByTitleContent", PostListView.as_view({'get': 'getPostByTitleContent'})),  # http://127.0.0.1:8000/user-app/posts/searchByTitleContent?keyWord=sau%20khi  order by CreatedDate desc
 
     path("posts/updateStatus", PostListView.as_view({'post': 'PostUpdateStatus'})), # update status in many post: http://127.0.0.1:8000/user-app/posts/updateStatus?postIDs=1,2,3&status=1 - status = 1 là duyệt, -1 là cancel, 0 là đang chờ duyệt 
-    path("posts/    ", PostListView.as_view({'post': 'post'})),  
+    path("posts/post", PostListView.as_view({'post': 'post'})),  
     path("posts/getTotalObject", PostListView.as_view({'get': 'getTotalObject'})),  #Đếm số lượng post, tag, user ở trạng thái 1 :  http://127.0.0.1:8000/user-app/posts/getTotalObject
     path("posts/updateViewLike", PostListView.as_view({'get': 'updateViewLike'})), #update view hoặc like tùy vào parameter, trả về post sau khi update, http://127.0.0.1:8000/user-app/posts/updateViewLike?postID=3&Like=-1&View=1
+    path("posts/postTags", PostListView.as_view({'get': 'postTagsToPosts_Tags'})),  # http://127.0.0.1:8000/user-app/posts/postTags?TagIDs=1,2,3,6&postID=6
+
 
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
@@ -47,7 +49,7 @@ urlpatterns = [
     path("tags/all", TagListView.as_view({'get': 'getAllTag'})),
     path("tags/byID", TagListView.as_view({'get': 'getTagByID'})), 
     path("tags/pagi", TagListView.as_view({'get': 'getTagPagination'})), 
-    path("tags/searchByName", TagListView.as_view({'get': 'searchByName'})), # http://127.0.0.1:8000/user-app/tags/searchByName?keyWord=jav
+    path("tags/searchByName", TagListView.as_view({'get': 'searchByName'})), # http://127.0.0.1:8000/user-app/tags/searchByName?keyWord=jav  
 
 
     path("tags/createTags", TagListView.as_view({'get': 'post'})), # http://127.0.0.1:8000/user-app/tags/createTags?Names=p,ja,na
@@ -61,6 +63,6 @@ urlpatterns = [
     # api for user 
     path('users/all', UserListView.as_view({'get': 'getAllUser'})),  #example: http://127.0.0.1:8000/user-app/users/all , không có page_size lấy mặc định là 10 
     path('users/pagi', UserListView.as_view({'get': 'getUserPagination'})),  #example: http://127.0.0.1:8000/user-app/users/pagi , không có page_size lấy mặc định là 10 
-    path('users/searchByName', UserListView.as_view({'get': 'searchByDisplayname'})), # http://127.0.0.1:8000/user-app/users/searchByName?keyWord=nhi
+    path('users/searchByName', UserListView.as_view({'get': 'searchByDisplayname'})), # http://127.0.0.1:8000/user-app/users/searchByName?keyWord=nhi  order by CreatedDate desc
     path("users/userUpdateStatus", UserListView.as_view({'post': 'UserUpdateStatus'})), # http://127.0.0.1:8000/user-app/users/userUpdateStatus?userIDs=1,2,3&status=1  , status 1 là hoạt động, 0 là bị ban
 ]

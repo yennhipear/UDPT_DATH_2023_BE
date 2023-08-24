@@ -16,7 +16,7 @@ class User(models.Model):
     RoleName = models.CharField(max_length=512)
     Status = models.IntegerField()
     Level = models.CharField(max_length=512)
-    CreatedDate = models.DateTimeField()
+    CreatedDate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.Name

@@ -120,12 +120,12 @@ class PostListView(ViewSet):
     def PostUpdateStatus(self, request , format=None):
         postIDs = self.request.query_params.get('postIDs')
         status = self.request.query_params.get('status')
-
+        commaChar = ','
         with connection.cursor() as cursor:
             # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
-            cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT unnest(string_to_array(%s, '','')) as id  )' , (status, postIDs))
-            row = cursor.fetchone()
-        return Response({'statusCode': 200, 'message': 'data connection ok'}, status.HTTP_200_OK)
+            cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, postIDs, commaChar))
+            
+        return Response({'statusCode': 200, 'message': 'data connection ok'}, status=status.HTTP_200_UPDATED)
     
     def updateViewLike(self, request , format=None):
         postID = self.request.query_params.get('postID')
@@ -153,3 +153,22 @@ class PostListView(ViewSet):
                     'totalUser': users
                 }
         return Response(data)
+    
+    def postTagsToPosts_Tags(self, request):
+        # b = Tag(id=10, Title="All the latest Beatles news.")
+        names = self.request.query_params.get('TagIDs')
+        postID = self.request.query_params.get('postID')
+        commaChar = ','
+        try:
+            with connection.cursor() as cursor:
+                # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+                cursor.execute('insert into  "Posts_Tags" ("Tag_id", "Post_id") select list.id, post.post_id from (SELECT cast(unnest(string_to_array(%s, %s)) as smallint)  as id) List , (select cast(%s as smallint) as post_id) as post ' , (names, commaChar, postID))
+                
+            posts = Post.objects.prefetch_related('TagID').get(ID = postID)
+            serializer = PostSerializer(posts, many=False)
+            return Response(serializer.data)
+        except:
+            return Response({'statusCode': 400 , 'message': 'can not insert!!'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
