@@ -12,6 +12,8 @@ class PostSerializer(ModelSerializer):  # sau mỗi field không có dấu phẩ
     TagID = TagSerializer(many=True, read_only=True)
     CommentID = CommentSerializer(many=True, read_only=True)
     UserAccountID = UserSerializer(many=False, read_only=True)
+    # Author = serializers.IntegerField(source="UserAccountID")
+
     class Meta:
         model = Post
         fields = '__all__'

@@ -20,6 +20,9 @@ from rest_framework.viewsets import ViewSet
 from django.db.models import Q
 from django.db.models import Count
 
+from django.http import JsonResponse
+import json
+
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'pageSize'
@@ -92,15 +95,23 @@ class PostListView(ViewSet):
         return Response(data)
 
     def post(self, request):
-        self.http_method_names.append("GET")
-        b = Post(ID=10, Title="All the latest Beatles news.")
-
+        data = json.loads(request.body)
         serializer = PostSerializer(data=request.data)
+        author = data['UserAccountID']
+        # print(data)
         if serializer.is_valid():
+            # print (serializer.data)
             serializer.save()
             # print (serializer.data['ID'])
             # print (serializer.data['TagID'])
-            # print (serializer.data)
+            postID = serializer.data['ID']
+            print(postID)
+            with connection.cursor() as cursor:
+                cursor.execute('UPDATE "Post" SET "UserAccountID" = %s where "ID" = %s' , (author, postID))
+            
+            newPost = Post.objects.prefetch_related('TagID').get(ID = postID)
+            serializer2 = PostSerializer(newPost, many=False)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
