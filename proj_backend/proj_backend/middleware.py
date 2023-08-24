@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.middleware.common import MiddlewareMixin
 
-SECRET_KEY = "django-insecure-o4@s$4=sk*^dnyi9l&9xtt!r-45sv&4%7hr-9jy2o_ii57$1b3"
+SECRET_KEY = "django-insecure-$gzjr*w3z9(hk+gc5jumw0z=*cvh^y8qxaqk4k(f79_*r1n8*%"
 
 class TokenAuthMiddleware(MiddlewareMixin):
     def __init__(self, get_response):
