@@ -16,13 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.schemas import get_schema_view
+from rest_framework.documentation import include_docs_urls
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # add app cho người dùng thường 
     path("user-app/", include("user_app.urls")), 
     # add rest framework 
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
     # api route for user app 
-    # path(app_settings.ROUTES_PREFIX, include("user_app.urls")),
-]
+    # Oauth
+    path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
+    # Project URLs
+    path('user/', include('authen_app.urls', namespace='authen_app'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
