@@ -186,11 +186,20 @@ class PostListView(ViewSet):
             return Response({'statusCode': 400 , 'message': 'can not insert!!'}, status=status.HTTP_400_BAD_REQUEST)
 
     def searchPostByTagName(self, request):
+        PageNumberPagination.page_size = self.request.query_params.get('pageSize', 1000000)  # Lấy giá trị tham số truy vấn, mặc định là 10
+        paginator = CustomPagination()
         tagName = self.request.query_params.get('keyWord')
         try:
             posts = Post.objects.prefetch_related('TagID').filter(TagID__Name__icontains = tagName)
+            page = paginator.paginate_queryset(posts, request, view=self)
+            serializer = PostSerializer(page, many=True)
 
-            serializer = PostSerializer(posts, many=True)
-            return Response(serializer.data)
+            data = {
+                'totalPage': paginator.page.paginator.num_pages,
+                'currentPage': paginator.page.number,
+                'data': serializer.data
+            }
+
+            return Response(data)
         except:
             return Response({'message:':'error while finding'}, status=status.HTTP_400_BAD_REQUEST)
