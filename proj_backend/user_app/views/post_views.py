@@ -185,5 +185,12 @@ class PostListView(ViewSet):
         except:
             return Response({'statusCode': 400 , 'message': 'can not insert!!'}, status=status.HTTP_400_BAD_REQUEST)
 
+    def searchPostByTagName(self, request):
+        tagName = self.request.query_params.get('keyWord')
+        try:
+            posts = Post.objects.prefetch_related('TagID').filter(TagID__Name__icontains = tagName)
 
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = PostSerializer(posts, many=True)
+            return Response(serializer.data)
+        except:
+            return Response({'message:':'error while finding'}, status=status.HTTP_400_BAD_REQUEST)

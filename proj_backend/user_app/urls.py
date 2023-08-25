@@ -41,7 +41,7 @@ urlpatterns = [
     path("posts/getTotalObject", PostListView.as_view({'get': 'getTotalObject'})),  #Đếm số lượng post, tag, user ở trạng thái 1 :  http://127.0.0.1:8000/user-app/posts/getTotalObject
     path("posts/updateViewLike", PostListView.as_view({'get': 'updateViewLike'})), #update view hoặc like tùy vào parameter, trả về post sau khi update, http://127.0.0.1:8000/user-app/posts/updateViewLike?postID=3&Like=-1&View=1&Answer=1
     path("posts/postTags", PostListView.as_view({'get': 'postTagsToPosts_Tags'})),  # http://127.0.0.1:8000/user-app/posts/postTags?TagIDs=d,b,a,c&postID=6  insert tag và post vào bảng trung gian
-
+    path("posts/searchPostByTagName", PostListView.as_view({'get': 'searchPostByTagName'})), # http://127.0.0.1:8000/user-app/posts/searchPostByTagName?keyWord=jav
 
     # api for tag 
     # get all : http://127.0.0.1:8000/user-app/tags/
