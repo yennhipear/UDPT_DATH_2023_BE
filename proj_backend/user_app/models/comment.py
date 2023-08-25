@@ -7,8 +7,9 @@ class Comment(models.Model):
     class Meta:
         db_table = 'Comment'
 
-    ID = models.PositiveBigIntegerField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     UserAccountID = models.IntegerField()
+    PostID = models.IntegerField()
     Content = models.TextField()
     
     Status = models.IntegerField()

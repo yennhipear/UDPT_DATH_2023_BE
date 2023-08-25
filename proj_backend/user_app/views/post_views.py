@@ -121,22 +121,28 @@ class PostListView(ViewSet):
         postIDs = self.request.query_params.get('postIDs')
         status = self.request.query_params.get('status')
         commaChar = ','
-        with connection.cursor() as cursor:
-            # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
-            cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, postIDs, commaChar))
-            
-        return Response({'statusCode': 200, 'message': 'data connection ok'}, status=status.HTTP_200_UPDATED)
-    
+        try:
+            with connection.cursor() as cursor:
+                # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+                cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, postIDs, commaChar))
+        
+            return Response( status=status.HTTP_201_CREATED)
+        except: 
+            return Response({'statusCode': 400 , 'message': 'cannot update'}, status=status.HTTP_400_BAD_REQUEST)
+
     def updateViewLike(self, request , format=None):
         postID = self.request.query_params.get('postID')
         like = self.request.query_params.get('Like')
         view = self.request.query_params.get('View')
-        if like is not None or view is not None: 
+        answer = self.request.query_params.get('Answer')  
+        if like is not None or view is not None or answer is not None: 
             with connection.cursor() as cursor:
                 if like is not None:
                     cursor.execute('UPDATE "Post" SET "Like" = "Like" + %s where "ID" = %s  ' , (like, postID)   )
                 if view is not None:
                     cursor.execute('UPDATE "Post" SET "View" = "View" + 1 where "ID" = %s  ' ,  [postID]  )
+                if answer is not None:
+                    cursor.execute('UPDATE "Post" SET "totalAnswer" = "totalAnswer" + %s where "ID" = %s  ' ,  (answer, postID)  )
                 
         posts = Post.objects.prefetch_related('TagID').get(ID = self.request.query_params.get('postID'))
         serializer = PostSerializer(posts, many=False)
@@ -162,7 +168,7 @@ class PostListView(ViewSet):
         try:
             with connection.cursor() as cursor:
                 # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
-                cursor.execute('insert into  "Posts_Tags" ("Tag_id", "Post_id") select list.id, post.post_id from (SELECT cast(unnest(string_to_array(%s, %s)) as smallint)  as id) List , (select cast(%s as smallint) as post_id) as post ' , (names, commaChar, postID))
+                cursor.execute('insert into  "Posts_Tags" ("Tag_id", "Post_id") select listtag.id, post.post_id from (SELECT c."ID" as id from (select trim(unnest(string_to_array(%s, %s)))  as name) a left join "Tag" c on a.name = c."Name") listtag, (select cast(%s as smallint) as post_id) as post ' , (names, commaChar, postID))
                 
             posts = Post.objects.prefetch_related('TagID').get(ID = postID)
             serializer = PostSerializer(posts, many=False)

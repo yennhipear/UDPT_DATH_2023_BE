@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.shortcuts import render 
 from rest_framework.response import Response
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.pagination import PageNumberPagination
 from django.http import HttpResponse
 
@@ -15,9 +15,16 @@ from ..serializers.post_serializer import PostSerializer
 from ..serializers.comment_serializers import CommentSerializer
 
 from rest_framework.views import APIView
+from rest_framework.viewsets import ViewSet
+
+from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
+from django.db import connection
+from django.http import JsonResponse
+import json
 
 
-class CommentListViewInOnePost(APIView):
+class CommentListViewInOnePost(ViewSet):
     pagination_class = PageNumberPagination
 
     def get(self, request):
@@ -33,5 +40,30 @@ class CommentListViewInOnePost(APIView):
         
         serializer = CommentSerializer(page, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        data = json.loads(request.body)
+        postID = data['PostID']
+        serializer = CommentSerializer(data=request.data)
+        # author = data['UserAccountID']
+        # serializer = CommentSerializer(data=request.data)
+        # print(data)
+        if serializer.is_valid():
+            serializer.save()
+            commentID = serializer.data['ID']
+            print (serializer.data)
+            # print (serializer.data['ID'])
+            # print (serializer.data['TagID'])
+            print(postID)
+            with connection.cursor() as cursor:
+                cursor.execute('insert into "Posts_Comments" ("Post_id", "Comment_id") values(%s,%s) ' , (postID, commentID))
+            
+            # newPost = Post.objects.prefetch_related('TagID').get(ID = postID)
+            # serializer2 = PostSerializer(newPost, many=False)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
         
 

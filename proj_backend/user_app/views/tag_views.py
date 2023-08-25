@@ -106,19 +106,6 @@ class TagListView(ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def postTagsToPosts_Tags(self, request):
-        # b = Tag(id=10, Title="All the latest Beatles news.")
-        names = self.request.query_params.get('Names')
-        postID = self.request.query_params.get('postID')
-        commaChar = ','
-        with connection.cursor() as cursor:
-            # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
-            cursor.execute('insert into  "Posts_Tags" ("Tag_id", "Post_id") select list.id, post.post_id from (SELECT unnest(string_to_array(%s, %s)) as id) List , (select %s as post_id) as post ' , (names, commaChar, postID))
-            
-        tags = Tag.objects.raw('SELECT b.* from (SELECT unnest(string_to_array(%s, %s)) as name) List left join "Tag" b on list.name = b."Name" ', (names, commaChar))
-        serializer = TagSerializer(tags, many =True)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
 
