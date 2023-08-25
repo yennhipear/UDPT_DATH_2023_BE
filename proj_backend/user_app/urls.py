@@ -76,6 +76,8 @@ urlpatterns = [
     # api for user 
     path('users/all', UserListView.as_view({'get': 'getAllUser'})),  #example: http://127.0.0.1:8000/user-app/users/all , không có page_size lấy mặc định là 10 
     path('users/pagi', UserListView.as_view({'get': 'getUserPagination'})),  #example: http://127.0.0.1:8000/user-app/users/pagi , không có page_size lấy mặc định là 10 
+    path('users/byID', UserListView.as_view({'get': 'getUserByID'})),  #example: http://127.0.0.1:8000/user-app/users/byID?userID=1 , 
+
     path('users/searchByName', UserListView.as_view({'get': 'searchByDisplayname'})), # http://127.0.0.1:8000/user-app/users/searchByName?keyWord=nhi  order by CreatedDate desc
     path("users/userUpdateStatus", UserListView.as_view({'post': 'UserUpdateStatus'})), # http://127.0.0.1:8000/user-app/users/userUpdateStatus?userIDs=1,2,3&status=1  , status 1 là hoạt động, 0 là bị ban
 
@@ -86,4 +88,13 @@ urlpatterns = [
     path('users/login', LoginView.as_view(), name='login'),
     path('users/logout', LogoutView.as_view(), name='logout'),
     path('users/view-user', UserView.as_view(), name='user-view'),
+    path('users/changePassword', ChangePassWordView.as_view(), name='changePassword'), 
+    # {
+    
+    # "email": "tuan@gmail.com",
+    # "password": "kkkkk",
+    # "oldPassword": "pbkdf2_sha256$600000$b2QhcIyMv0MsSCAWj79soG$IugcnEYbfBn0g2of25GKOEsh0p+rVlhMMcH0Uo+UqEE="
+    
+    # }
+
 ]
