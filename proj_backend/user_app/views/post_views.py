@@ -109,8 +109,6 @@ class PostListView(ViewSet):
             with connection.cursor() as cursor:
                 cursor.execute('UPDATE "Post" SET "UserAccountID" = %s, "LastModifiedBy" = %s  where "ID" = %s' , (author, author, postID))
             
-            newPost = Post.objects.prefetch_related('TagID').get(ID = postID)
-            serializer2 = PostSerializer(newPost, many=False)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -123,12 +121,22 @@ class PostListView(ViewSet):
         commaChar = ','
         try:
             with connection.cursor() as cursor:
-                # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+                    # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
                 cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, postIDs, commaChar))
+            posts = Post.objects.raw('select "ID", "Status" from "Post" where  "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (postIDs, commaChar))
+            serializer = PostSerializer(posts, many=True)
+            content = {'please move along': 'nothing to see here'}
+            return HttpResponse(status=200)
+        except:
+            return HttpResponse(status=400)
+        # try:
+        #     with connection.cursor() as cursor:
+        #         # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+        #         cursor.execute('UPDATE "Post" SET "Status" = %s where "ID" in (SELECT  cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, postIDs, commaChar))
         
-            return Response( status=status.HTTP_201_CREATED)
-        except: 
-            return Response({'statusCode': 400 , 'message': 'cannot update'}, status=status.HTTP_400_BAD_REQUEST)
+        #     return Response({'statusCode': 200 , 'message': 'update successfully'}, status=status.HTTP_201_CREATED)
+        # except: 
+        #     return Response({'statusCode': 400 , 'message': 'cannot update'}, status=status.HTTP_400_BAD_REQUEST)
 
     def updateViewLike(self, request , format=None):
         postID = self.request.query_params.get('postID')

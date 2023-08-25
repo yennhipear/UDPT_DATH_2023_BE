@@ -93,11 +93,13 @@ class UserListView(ViewSet):
     def UserUpdateStatus(self, request):
         userIDs = self.request.query_params.get('userIDs')
         status = self.request.query_params.get('status')
-
-        with connection.cursor() as cursor:
-            # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
-            cursor.execute('UPDATE "User" SET "Status" = %s where "ID" in (SELECT unnest(string_to_array(%s, '','')) as id  )' , (status, userIDs))
-            row = cursor.fetchone()
-        return Response({'statusCode': 200, 'message': 'data connection ok'}, status.HTTP_200_OK)
+        try:
+            with connection.cursor() as cursor:
+                # cursor.execute('UPDATE "Post" SET "Status" = %s WHERE "ID" = %s', [status], [postIDs] )
+                cursor.execute('UPDATE "User" SET "Status" = %s where "ID" in (SELECT cast(unnest(string_to_array(%s, %s)) as smallint) as id  )' , (status, userIDs))
+                row = cursor.fetchone()
+            return HttpResponse(status=200)
+        except:
+            return HttpResponse(status=400)
     
     
