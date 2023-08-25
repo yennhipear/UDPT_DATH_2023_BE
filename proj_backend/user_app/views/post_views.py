@@ -160,7 +160,7 @@ class PostListView(ViewSet):
     def getTotalObject(self, request):
         posts = Post.objects.filter(Status=1).count()
         users = User.objects.filter(Status=1).count()
-        tags = Tag.objects.filter(Status=1).count()
+        tags  = Tag.objects.filter(Status=1).count()
 
         data = {
                     'totalPost': posts,

@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt import views as jwt_views
 
 from rest_framework import generics
 
@@ -24,6 +25,7 @@ from .views.user_views import *
 from .views.post_views import *
 from .views.tag_views import *
 from .views.comment_views import *
+from .views.auth_views import *
 
 
 urlpatterns = [
@@ -76,4 +78,12 @@ urlpatterns = [
     path('users/pagi', UserListView.as_view({'get': 'getUserPagination'})),  #example: http://127.0.0.1:8000/user-app/users/pagi , không có page_size lấy mặc định là 10 
     path('users/searchByName', UserListView.as_view({'get': 'searchByDisplayname'})), # http://127.0.0.1:8000/user-app/users/searchByName?keyWord=nhi  order by CreatedDate desc
     path("users/userUpdateStatus", UserListView.as_view({'post': 'UserUpdateStatus'})), # http://127.0.0.1:8000/user-app/users/userUpdateStatus?userIDs=1,2,3&status=1  , status 1 là hoạt động, 0 là bị ban
+
+    #authen
+    # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/register', RegisterView.as_view(), name='register'),
+    path('users/login', LoginView.as_view(), name='login'),
+    path('users/logout', LogoutView.as_view(), name='logout'),
+    path('users/view-user', UserView.as_view(), name='user-view'),
 ]

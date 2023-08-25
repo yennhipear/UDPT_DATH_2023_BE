@@ -6,7 +6,7 @@ class User(models.Model):
     class Meta:
         db_table = 'UserAccount'
 
-    ID = models.PositiveBigIntegerField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     DisplayName = models.CharField(max_length=512)
     Email = models.CharField(max_length=512)
     Password = models.CharField(max_length=512)
@@ -16,7 +16,7 @@ class User(models.Model):
     RoleName = models.CharField(max_length=512)
     Status = models.IntegerField()
     Level = models.CharField(max_length=512)
-    CreatedDate = models.DateTimeField(auto_now_add=True)
+    CreatedDate = models.DateTimeField()
 
     def __str__(self):
-        return self.Name
+        return self.DisplayName
