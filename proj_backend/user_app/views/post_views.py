@@ -143,11 +143,17 @@ class PostListView(ViewSet):
         like = self.request.query_params.get('Like')
         view = self.request.query_params.get('View')
         answer = self.request.query_params.get('Answer')  
+        userID = self.request.query_params.get('userID', '')
         if like is not None or view is not None or answer is not None: 
             with connection.cursor() as cursor:
                 if like is not None:
                     # cursor.execute('if not exists(select 1 from user_like where use_id = %s and post_id = %s) begin insert into user_like(user_id, post_id, comment_id , like, "createdDate") values(%s, %s, null, %s, now() ) end else  UPDATE "user_like" SET "like" = %s where "user_id" = %s and post_id = %s ' , (like, postID)   )
-                    cursor.execute('UPDATE "Post" SET "Like" = "Like" + %s where "ID" = %s  ' , (like, postID)   )
+                    
+                    # cursor.execute('UPDATE "Post" SET "Like" = "Like" + %s where "ID" = %s  and not exists (select 1 from "user_like" where "user_id" = %s and "post_id" = %s  and "like" = %s ) ' , (like, postID, userID, postID, like)   )
+                    
+                    # cursor.execute('delete FROM "user_like" where "user_id" = %s and "post_id" = %s  ' , (userID, postID))
+                    # cursor.execute('insert into "user_like"("user_id", "post_id" , "like", "createdDate") values(%s, %s, %s, now() ) ' , (userID, postID, like))
+                    cursor.execute('UPDATE "Post" SET "Like" = "Like" + %s where "ID" = %s   ' , (like, postID)   )
                 if view is not None:
                     cursor.execute('UPDATE "Post" SET "View" = "View" + 1 where "ID" = %s  ' ,  [postID]  )
                 if answer is not None:

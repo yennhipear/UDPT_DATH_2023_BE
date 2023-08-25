@@ -107,3 +107,29 @@ class UserView(APIView):
         user = User.objects.filter(ID=payload['id']).values().first()
         user.pop('Password')
         return Response(user)
+
+class ChangePassWordView(APIView):
+    def post(self, request):
+        print('change password', request.user)
+        email = request.data['email']
+        password = make_password(request.data['password'])
+        oldPassword = request.data['oldPassword']
+        
+        if not password:
+            return Response({'message': 'Password is required!'})
+        
+
+        user = UserSerializer(User.objects.filter(Email=email), many=True)
+        if len(user.data) == 0:
+            return Response({'message': 'Email not found!'})
+        # user = User()
+
+        print(user.data[0].get('Password'))
+        if user.data[0].get('Password') != oldPassword:
+            return Response({'message': 'Old password is invalid!'})
+        elif user.data[0].get('Password') == password:
+            return Response({'message': 'New password is invalid!'})
+        else:
+            with connection.cursor() as cursor: 
+                cursor.execute('update "UserAccount" set "Password" = %s where "Email" = %s ' , (password, email))
+        return Response({'message': 'Change password successfully!'}, status=status.HTTP_201_CREATED)

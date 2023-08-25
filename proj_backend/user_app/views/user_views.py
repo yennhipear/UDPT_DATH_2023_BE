@@ -36,12 +36,12 @@ class UserListView(ViewSet):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-    def getTagByID(self, request):
+    def getUserByID(self, request):
         try:
             if self.request.query_params.get('userID'): 
                 userID = self.request.query_params.get('userID')
                 users = User.objects.get(ID= userID)
-                serializer = UserSerializer(tags, many = False) #mean single object 
+                serializer = UserSerializer(users, many = False) #mean single object 
                 return Response(serializer.data)
             else: return Response({'statusCode': 404, 'message': 'Invalid User ID'}, status.HTTP_200_OK)
         except: 
