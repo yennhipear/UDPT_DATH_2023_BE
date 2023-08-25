@@ -69,6 +69,7 @@ urlpatterns = [
     #     "CreatedDate": null,
     #     "LastModifiedDate": null
     # }
+    path("comments/likeComment", CommentListViewInOnePost.as_view({'get': 'likeComment'})),  # http://127.0.0.1:8000/user-app/comments/likeComment?commentID=1&Like=1
 
     # api for user 
     path('users/all', UserListView.as_view({'get': 'getAllUser'})),  #example: http://127.0.0.1:8000/user-app/users/all , không có page_size lấy mặc định là 10 
