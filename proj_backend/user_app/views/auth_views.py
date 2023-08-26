@@ -35,11 +35,11 @@ class RegisterView(APIView):
         user.DisplayName = displayname
         user.Email = email
         user.Password = make_password(password)
-        user.AboutMe = 'My name is' + displayname
+        user.AboutMe = 'My name is ' + displayname
         user.Location = 'Viet Nam'
-        user.RoleID = 1
+        user.RoleID = 0
         user.RoleName = 'User'
-        user.Status = 0
+        user.Status = 1
         user.Level = 1
         user.save()
 
@@ -61,20 +61,20 @@ class LoginView(APIView):
             return Response({'message': 'Incorrect password!'}, status=status.HTTP_400_BAD_REQUEST)
         
         user.pop('Password')
-        payload = {
-            'id': user['ID'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow(),
-            'user': user
-        }
+        # payload = {
+        #     'id': user['ID'],
+        #     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        #     'iat': datetime.datetime.utcnow(),
+        #     'user': user
+        # }
         # token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256').decode('utf-8')
-        token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
+        # token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
 
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
+        # response.set_cookie(key='jwt', value=token, httponly=True)
         
         response.data = {
-            'token': token,
+            'token': '',
             'user': user
         }
         return Response({
