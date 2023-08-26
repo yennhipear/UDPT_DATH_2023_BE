@@ -49,7 +49,7 @@ class CommentListViewInOnePost(ViewSet):
         data = json.loads(request.body)
         postID = data['PostID']
         serializer = CommentSerializer(data=request.data)
-        # author = data['UserAccountID']
+        author = data['UserAccountID']
         # serializer = CommentSerializer(data=request.data)
         # print(data)
         if serializer.is_valid():
@@ -61,7 +61,7 @@ class CommentListViewInOnePost(ViewSet):
             print(postID)
             with connection.cursor() as cursor:
                 cursor.execute('insert into "Posts_Comments" ("Post_id", "Comment_id") values(%s,%s) ' , (postID, commentID))
-            
+                cursor.execute('update "Comment" set "UserAccountID" = %s where "ID" = %s ' , (author, commentID))
             # newPost = Post.objects.prefetch_related('TagID').get(ID = postID)
             # serializer2 = PostSerializer(newPost, many=False)
 
