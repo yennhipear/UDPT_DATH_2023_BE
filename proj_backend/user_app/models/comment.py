@@ -8,8 +8,8 @@ class Comment(models.Model):
         db_table = 'Comment'
 
     ID = models.AutoField(primary_key=True)
-    # UserAccountID = models.ForeignKey(User, on_delete=models.CASCADE, db_column = 'UserAccountID')
-    UserAccountID =  models.IntegerField()
+    UserAccountID = models.ForeignKey(User, on_delete=models.CASCADE, db_column = 'UserAccountID')
+    # UserAccountID =  models.IntegerField()
     PostID = models.IntegerField()
     Content = models.TextField()
     Like =  models.IntegerField()
