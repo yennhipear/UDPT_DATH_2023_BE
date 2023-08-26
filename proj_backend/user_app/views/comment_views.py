@@ -49,7 +49,7 @@ class CommentListViewInOnePost(ViewSet):
         data = json.loads(request.body)
         postID = data['PostID']
         serializer = CommentSerializer(data=request.data)
-        author = data['UserAccountID']
+        # author = data['UserAccountID']
         # serializer = CommentSerializer(data=request.data)
         # print(data)
         if serializer.is_valid():
